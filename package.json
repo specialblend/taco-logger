@@ -1,0 +1,51 @@
+{
+  "name": "@specialblend/taco-logger",
+  "version": "0.0.0",
+  "description": "namespaced, flattened JSON event logger - safe for elastic/filebeat",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "jest .",
+    "coverage": "jest --coverage .",
+    "lint": "eslint .",
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build",
+    "pretest": "npm run build",
+    "check": "npm test && npm run coverage && npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specialblend/taco-logger.git"
+  },
+  "keywords": [
+    "json",
+    "event",
+    "logger",
+    "elastic",
+    "filebeat",
+    "bunyan"
+  ],
+  "author": "cj@specialblend.net",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/specialblend/taco-logger/issues"
+  },
+  "homepage": "https://github.com/specialblend/taco-logger#readme",
+  "peerDependencies": {
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@specialblend/eslint-config": "^0.1.1",
+    "eslint": "^6.3.0",
+    "jest": "^24.9.0",
+    "jest-extended": "^0.11.2",
+    "rollup": "^1.21.2",
+    "winston": "^3.2.1"
+  },
+  "dependencies": {
+    "flat": "^4.1.0",
+    "ramda": "^0.26.1"
+  }
+}

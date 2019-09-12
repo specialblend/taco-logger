@@ -1,0 +1,6 @@
+{
+  "extends": "@specialblend/eslint-config",
+  "env": {
+    "jest": true
+  }
+}
