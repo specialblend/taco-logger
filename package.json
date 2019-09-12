@@ -2,7 +2,8 @@
   "name": "@specialblend/taco-logger",
   "version": "0.0.0",
   "description": "namespaced, flattened JSON event logger - safe for elastic/filebeat",
-  "main": "src/main.js",
+  "main": "lib/index.js",
+  "module": "lib/index.esm.js",
   "scripts": {
     "test": "jest .",
     "coverage": "jest --coverage .",
@@ -12,6 +13,9 @@
     "pretest": "npm run build",
     "check": "npm test && npm run coverage && npm run lint"
   },
+  "files": [
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/specialblend/taco-logger.git"
