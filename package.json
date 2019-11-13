@@ -1,6 +1,6 @@
 {
   "name": "@specialblend/taco-logger",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "namespaced, flattened JSON event logger - safe for elastic/filebeat",
   "main": "lib/index.js",
   "module": "lib/index.js",
