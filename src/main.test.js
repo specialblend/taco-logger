@@ -116,6 +116,31 @@ describe('createLogger', () => {
                     });
                 });
             });
+            describe('#exception', () => {
+                test('is Function', () => {
+                    expect(logger.exception).toBeFunction();
+                });
+                test('logs expected data', () => {
+                    const myErr = new Error('test error message');
+                    const eventType = 'ExceptionTypeCharlie';
+                    const level = 'error';
+                    const message = 'This is a test message. azswexdrfctvgybhunjimkol';
+                    logger.exception(myErr, eventType, fooNestedObjLiteral, message);
+                    const expectedPayload = {
+                        info: fooNestedObjLiteral,
+                        error: {
+                            message: myErr.message,
+                            stack: myErr.stack,
+                        },
+                    };
+                    const expectedLog = expect.objectContaining({
+                        ...normalizeEventLog(namespace, eventType, expectedPayload),
+                        level,
+                        message,
+                    });
+                    expect(defaultLogHandler).toHaveBeenCalledWith(expectedLog, expect.any(Function));
+                });
+            });
         });
         describe('with default namespace', () => {
             const namespace = 'app';
