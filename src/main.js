@@ -1,25 +1,14 @@
 import BunyanLogger from 'bunyan';
-import flat from 'flat';
-import { curry, is, map, pipe, unless } from 'ramda';
+import { and, is } from 'ramda';
+import normalize from './normalize';
 
-const serializeChild = unless(is(String), JSON.stringify);
-const serializeObject = pipe(flat, map(serializeChild));
-
-const normalizeLogPayload = curry(
-    (name, type, meta) => {
-        const payload = {
-            [name]: {
-                [type]: meta,
-            },
-        };
-        return serializeObject(payload);
-    }
-);
+const isString = is(String);
+const isObject = is(Object);
 
 export class Logger extends BunyanLogger {
     normalizeLog(first, ...rest) {
-        if (is(Object, first) && this.fields.type) {
-            const payload = normalizeLogPayload(this.fields.name, this.fields.type, first);
+        if (and(isString(this.fields.type), isObject(first))) {
+            const payload = normalize(this.fields.name, this.fields.type, first);
             return [payload, ...rest];
         }
         return [first, ...rest];
@@ -51,6 +40,10 @@ export class Logger extends BunyanLogger {
 
     type(type) {
         return this.child({ type });
+    }
+
+    withRequestId(requestId) {
+        return this.child({ requestId });
     }
 }
 
