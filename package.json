@@ -3,6 +3,7 @@
   "version": "0.0.10",
   "description": "namespaced, flattened JSON event logger - safe for elastic/filebeat",
   "main": "index.js",
+  "module": "lib/index.mjs",
   "files": [
     "lib"
   ],

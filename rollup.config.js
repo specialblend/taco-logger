@@ -1,8 +1,10 @@
+import { module as __module__ } from './package.json';
+
 export default {
     input: 'src/main.js',
     output: [
         {
-            file: 'lib/index.esm.js',
+            file: __module__,
             format: 'esm',
         },
     ],
