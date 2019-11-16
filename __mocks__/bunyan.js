@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 export const $trace = jest.fn();
 export const $debug = jest.fn();
 export const $info = jest.fn();
