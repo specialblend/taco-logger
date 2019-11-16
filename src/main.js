@@ -1,42 +1,59 @@
-/* eslint-disable import/no-extraneous-dependencies,max-params,no-invalid-this,func-style */
+import BunyanLogger from 'bunyan';
+import flat from 'flat';
+import { curry, is, map, pipe, unless } from 'ramda';
 
-import * as winston from 'winston';
-import normalizeEventLog from './normalizeLog';
-import { always, pick } from 'ramda';
+const serializeChild = unless(is(String), JSON.stringify);
+const serializeObject = pipe(flat, map(serializeChild));
 
-function event(eventType, eventPayload, message, level = 'info') {
-    const normalizedEvent = normalizeEventLog(this.namespace, eventType, eventPayload);
-    if (typeof message === 'undefined') {
-        return this.log(level, normalizedEvent);
+const normalizeLogPayload = curry(
+    (name, type, meta) => {
+        const payload = {
+            [name]: {
+                [type]: meta,
+            },
+        };
+        return serializeObject(payload);
     }
-    return this.log(level, message, normalizedEvent);
+);
+
+export class Logger extends BunyanLogger {
+    normalizeLog(first, ...rest) {
+        if (is(Object, first) && this.fields.type) {
+            const payload = normalizeLogPayload(this.fields.name, this.fields.type, first);
+            return [payload, ...rest];
+        }
+        return [first, ...rest];
+    }
+
+    trace(...args) {
+        return super.trace(...this.normalizeLog(...args));
+    }
+
+    debug(...args) {
+        return super.debug(...this.normalizeLog(...args));
+    }
+
+    info(...args) {
+        return super.info(...this.normalizeLog(...args));
+    }
+
+    warn(...args) {
+        return super.warn(...this.normalizeLog(...args));
+    }
+
+    error(...args) {
+        return super.error(...this.normalizeLog(...args));
+    }
+
+    fatal(...args) {
+        return super.fatal(...this.normalizeLog(...args));
+    }
+
+    type(type) {
+        return this.child({ type });
+    }
 }
 
-function withRequestId(requestId) {
-    return this.child({ requestId });
-}
-
-function exception(err, type, info, exceptionMessage) {
-    const error = pick(['message', 'stack'], err);
-    const payload = {
-        info,
-        error,
-    };
-    return this.event(type, payload, exceptionMessage, 'error');
-}
-
-export const buildDefaultTransport = always(new winston.transports.Console);
-
-export default function createLogger(options = {}) {
-    const { namespace = 'app', transports = [buildDefaultTransport()], ...winstonLoggerOptions } = options;
-    const winstonLogger = winston.createLogger({
-        transports,
-        ...winstonLoggerOptions,
-    });
-    return Object.assign(winstonLogger, {
-        namespace,
-        event,
-        exception,
-        withRequestId,
-    });
+export default function createLogger(options) {
+    return new Logger(options);
 }
