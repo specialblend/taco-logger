@@ -3,6 +3,7 @@
   "version": "0.0.8",
   "description": "namespaced, flattened JSON event logger - safe for elastic/filebeat",
   "main": "index.js",
+  "files": ["index.js"],
   "scripts": {
     "build": "rollup -c",
     "coverage": "jest --coverage .",
