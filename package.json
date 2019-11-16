@@ -4,7 +4,7 @@
   "description": "namespaced, flattened JSON event logger - safe for elastic/filebeat",
   "main": "index.js",
   "files": [
-    "index.js"
+    "lib"
   ],
   "scripts": {
     "build": "rollup -c",
