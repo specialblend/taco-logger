@@ -88,6 +88,16 @@ describe('createLogger', () => {
                 logger.error($messageObj, $messageStr);
                 expect($error).toHaveBeenCalledWith(...logger.normalizeLog($messageObj, $messageStr));
             });
+            test('exception works as expected', () => {
+                const message = 'oops! test error.';
+                const code = 'TEST_ERR_CODE';
+                const stack = 'phat stax';
+                const $foo = 'foo';
+                const $err = { message, stack, code, $foo };
+                const err = { message, stack, code };
+                logger.exception($err, $messageStr);
+                expect($error).toHaveBeenCalledWith(...logger.normalizeLog({ err }, $messageStr));
+            });
             test('fatal works as expected', () => {
                 logger.fatal($messageObj, $messageStr);
                 expect($fatal).toHaveBeenCalledWith(...logger.normalizeLog($messageObj, $messageStr));

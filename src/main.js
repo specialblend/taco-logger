@@ -1,9 +1,11 @@
 import BunyanLogger from 'bunyan';
-import { and, is } from 'ramda';
+import { and, is, pick } from 'ramda';
 import normalize from './normalize';
 
 const isString = is(String);
 const isObject = is(Object);
+
+const formatException = pick(['message', 'stack', 'code']);
 
 export class Logger extends BunyanLogger {
     normalizeLog(first, ...rest) {
@@ -36,6 +38,11 @@ export class Logger extends BunyanLogger {
 
     fatal(...args) {
         return super.fatal(...this.normalizeLog(...args));
+    }
+
+    exception(ex, ...args) {
+        const err = formatException(ex);
+        return this.error({ err }, ...args);
     }
 
     type(type) {
