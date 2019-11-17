@@ -1,6 +1,6 @@
 # taco-logger
 
-wrapper around `winston` logger to provide namespaced, flattened JSON event logger - safe for elastic/filebeat
+wrapper around `bunyan` logger to provide namespaced, flattened JSON logs - safe for elastic/filebeat
 
 ## install
 
@@ -8,79 +8,104 @@ wrapper around `winston` logger to provide namespaced, flattened JSON event logg
 npm install @specialblend/taco-logger
 ```
 
-## example log format
+## examples
 
-example
+code
 
 ```javascript
-logger
-    .withRequestId('537ff8cb-a5fd-41d7-8de7-188407163608')
-    .event('LoginFailed', { username: 'alice@example.com', failedAttempts: }, 'Failed login attempt');
+const createLogger = require('./index').default;
+
+const name = 'taco';
+const requestId = 'a90e0e3c-7159-453e-b224-cc5fa5cfe3a6';
+
+const logger = createLogger({ name }).withRequestId(requestId);
+
+logger.info({ foo: 'bar', baz: 'faz' }, 'this is a normal bunyan info log -- not safe for elasticsearch!');
+logger.error({ foo: 'bar', baz: 'faz' }, 'this is a normal bunyan error log -- not safe for elasticsearch!');
+
+logger.type('TestLog').info({ foo: 'bar', baz: 'faz' }, 'this is a flattened, normalized info log; safe for elasticsearch.');
+logger.type('TestError').error({ foo: 'bar', baz: 'faz' }, 'this is a flattened, normalized error log; safe for elasticsearch.');
+
+const err = new Error('this is a test error.');
+logger.type('SomeError').exception(err, 'this is a flattened, normalized error log which prints err.(message|stack|code); safe for elasticsearch.');
+
 ```
 
-output:
+output
 
-```json
-{"requestId":"537ff8cb-a5fd-41d7-8de7-188407163608","namespace":"FooBar","FooBar.type":"LoginFailed","FooBar.event.LoginFailed.username":"alice@example.com","level":"info","message":"Failed login attempt"}
+```
+{"name":"taco","hostname":"whisky","pid":83428,"requestId":"a90e0e3c-7159-453e-b224-cc5fa5cfe3a6","level":30,"foo":"bar","baz":"faz","msg":"this is a normal bunyan info log -- not safe for elasticsearch!","time":"2019-11-17T03:36:03.114Z","v":0}
+{"name":"taco","hostname":"whisky","pid":83428,"requestId":"a90e0e3c-7159-453e-b224-cc5fa5cfe3a6","level":50,"foo":"bar","baz":"faz","msg":"this is a normal bunyan error log -- not safe for elasticsearch!","time":"2019-11-17T03:36:03.117Z","v":0}
+{"name":"taco","hostname":"whisky","pid":83428,"requestId":"a90e0e3c-7159-453e-b224-cc5fa5cfe3a6","type":"TestLog","level":30,"taco.TestLog.foo":"bar","taco.TestLog.baz":"faz","msg":"this is a flattened, normalized info log; safe for elasticsearch.","time":"2019-11-17T03:36:03.119Z","v":0}
+{"name":"taco","hostname":"whisky","pid":83428,"requestId":"a90e0e3c-7159-453e-b224-cc5fa5cfe3a6","type":"TestError","level":50,"taco.TestError.foo":"bar","taco.TestError.baz":"faz","msg":"this is a flattened, normalized error log; safe for elasticsearch.","time":"2019-11-17T03:36:03.120Z","v":0}
+{"name":"taco","hostname":"whisky","pid":83428,"requestId":"a90e0e3c-7159-453e-b224-cc5fa5cfe3a6","type":"SomeError","level":50,"taco.SomeError.err.message":"this is a test error.","taco.SomeError.err.stack":"Error: this is a test error.\n    at Object.<anonymous> (/Users/specialblend/workspace/taco-logger/example.js:14:13)\n    at Module._compile (internal/modules/cjs/loader.js:936:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:947:10)\n    at Module.load (internal/modules/cjs/loader.js:790:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:703:12)\n    at Function.Module.runMain (internal/modules/cjs/loader.js:999:10)\n    at internal/main/run_main_module.js:17:11","msg":"this is a flattened, normalized error log which prints err.(message|stack|code); safe for elasticsearch.","time":"2019-11-17T03:36:03.121Z","v":0}
 ```
 
-output (pretty):
-```json
+output (pretty)
+
+```
 {
-  "requestId": "537ff8cb-a5fd-41d7-8de7-188407163608",
-  "namespace": "FooBar",
-  "FooBar.type": "LoginFailed",
-  "FooBar.event.LoginFailed.username": "alice@example.com",
-  "level": "info",
-  "message": "Failed login attempt"
+  "name": "taco",
+  "hostname": "whisky",
+  "pid": 83491,
+  "requestId": "a90e0e3c-7159-453e-b224-cc5fa5cfe3a6",
+  "level": 30,
+  "foo": "bar",
+  "baz": "faz",
+  "msg": "this is a normal bunyan info log -- not safe for elasticsearch!",
+  "time": "2019-11-17T03:36:16.554Z",
+  "v": 0
 }
-```
-
-## usage
-
-```javascript
-import createLogger from './lib';
-
-// minimal call: createLogger();
-
-const appLogger = createLogger();
-
-// minimal call: appLogger.event(<type>, <event>)
-
-appLogger.event('LoginFailed', { username: 'alice@example.com' });
-// => {"namespace":"app","app.type":"LoginFailed","app.event.LoginFailed.username":"alice@example.com","level":"info"}
-
-// log event with message
-
-appLogger.event('LoginFailed', { username: 'alice@example.com' }, 'Failed login attempt');
-// => {"namespace":"app","app.type":"LoginFailed","app.event.LoginFailed.username":"alice@example.com","level":"info","message":"Failed login attempt"}
-
-// log event with requestId
-
-appLogger
-    .withRequestId('537ff8cb-a5fd-41d7-8de7-188407163608')
-    .event('LoginFailed', { username: 'alice@example.com' }, 'Failed login attempt');
-// => {"requestId":"537ff8cb-a5fd-41d7-8de7-188407163608","namespace":"app","app.type":"LoginFailed","app.event.LoginFailed.username":"alice@example.com","level":"info","message":"Failed login attempt"}
-
-// create logger with namespace
-
-const myFooBarLogger = createLogger({ namespace: 'FooBar' });
-
-// minimal call: myLogger.event(<type>, <event>)
-
-myFooBarLogger.event('LoginFailed', { username: 'alice@example.com' });
-// => {"namespace":"FooBar","FooBar.type":"LoginFailed","FooBar.event.LoginFailed.username":"alice@example.com","level":"info"}
-
-// log event with message
-
-myFooBarLogger.event('LoginFailed', { username: 'alice@example.com' }, 'Failed login attempt');
-// => {"namespace":"FooBar","FooBar.type":"LoginFailed","FooBar.event.LoginFailed.username":"alice@example.com","level":"info","message":"Failed login attempt"}
-
-// log event with requestId
-
-myFooBarLogger
-    .withRequestId('537ff8cb-a5fd-41d7-8de7-188407163608')
-    .event('LoginFailed', { username: 'alice@example.com' }, 'Failed login attempt');
-// => {"requestId":"537ff8cb-a5fd-41d7-8de7-188407163608","namespace":"FooBar","FooBar.type":"LoginFailed","FooBar.event.LoginFailed.username":"alice@example.com","level":"info","message":"Failed login attempt"}
+{
+  "name": "taco",
+  "hostname": "whisky",
+  "pid": 83491,
+  "requestId": "a90e0e3c-7159-453e-b224-cc5fa5cfe3a6",
+  "level": 50,
+  "foo": "bar",
+  "baz": "faz",
+  "msg": "this is a normal bunyan error log -- not safe for elasticsearch!",
+  "time": "2019-11-17T03:36:16.555Z",
+  "v": 0
+}
+{
+  "name": "taco",
+  "hostname": "whisky",
+  "pid": 83491,
+  "requestId": "a90e0e3c-7159-453e-b224-cc5fa5cfe3a6",
+  "type": "TestLog",
+  "level": 30,
+  "taco.TestLog.foo": "bar",
+  "taco.TestLog.baz": "faz",
+  "msg": "this is a flattened, normalized info log; safe for elasticsearch.",
+  "time": "2019-11-17T03:36:16.556Z",
+  "v": 0
+}
+{
+  "name": "taco",
+  "hostname": "whisky",
+  "pid": 83491,
+  "requestId": "a90e0e3c-7159-453e-b224-cc5fa5cfe3a6",
+  "type": "TestError",
+  "level": 50,
+  "taco.TestError.foo": "bar",
+  "taco.TestError.baz": "faz",
+  "msg": "this is a flattened, normalized error log; safe for elasticsearch.",
+  "time": "2019-11-17T03:36:16.556Z",
+  "v": 0
+}
+{
+  "name": "taco",
+  "hostname": "whisky",
+  "pid": 83491,
+  "requestId": "a90e0e3c-7159-453e-b224-cc5fa5cfe3a6",
+  "type": "SomeError",
+  "level": 50,
+  "taco.SomeError.err.message": "this is a test error.",
+  "taco.SomeError.err.stack": "Error: this is a test error.\n    at Object.<anonymous> (/Users/specialblend/workspace/taco-logger/example.js:14:13)\n    at Module._compile (internal/modules/cjs/loader.js:936:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:947:10)\n    at Module.load (internal/modules/cjs/loader.js:790:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:703:12)\n    at Function.Module.runMain (internal/modules/cjs/loader.js:999:10)\n    at internal/main/run_main_module.js:17:11",
+  "msg": "this is a flattened, normalized error log which prints err.(message|stack|code); safe for elasticsearch.",
+  "time": "2019-11-17T03:36:16.556Z",
+  "v": 0
+}
 
 ```

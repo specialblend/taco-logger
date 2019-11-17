@@ -1,43 +1,15 @@
-import createLogger from '../lib';
+const createLogger = require('../index').default;
 
-// minimal call: createLogger();
+const name = 'taco';
+const requestId = 'a90e0e3c-7159-453e-b224-cc5fa5cfe3a6';
 
-const appLogger = createLogger();
+const logger = createLogger({ name }).withRequestId(requestId);
 
-// minimal call: appLogger.event(<eventType>, <event>)
+logger.info({ foo: 'bar', baz: 'faz' }, 'this is a normal bunyan info log -- not safe for elasticsearch!');
+logger.error({ foo: 'bar', baz: 'faz' }, 'this is a normal bunyan error log -- not safe for elasticsearch!');
 
-appLogger.event('LoginFailed', { username: 'alice@example.com' });
-// => {"namespace":"app","app.eventType":"LoginFailed","app.event.LoginFailed.username":"alice@example.com","level":"info"}
+logger.type('TestLog').info({ foo: 'bar', baz: 'faz' }, 'this is a flattened, normalized info log; safe for elasticsearch.');
+logger.type('TestError').error({ foo: 'bar', baz: 'faz' }, 'this is a flattened, normalized error log; safe for elasticsearch.');
 
-// log event with message
-
-appLogger.event('LoginFailed', { username: 'alice@example.com' }, 'Failed login attempt');
-// => {"namespace":"app","app.eventType":"LoginFailed","app.event.LoginFailed.username":"alice@example.com","level":"info","message":"Failed login attempt"}
-
-// log event with requestId
-
-appLogger
-    .withRequestId('537ff8cb-a5fd-41d7-8de7-188407163608')
-    .event('LoginFailed', { username: 'alice@example.com' }, 'Failed login attempt');
-// => {"requestId":"537ff8cb-a5fd-41d7-8de7-188407163608","namespace":"app","app.eventType":"LoginFailed","app.event.LoginFailed.username":"alice@example.com","level":"info","message":"Failed login attempt"}
-
-// create logger with namespace
-
-const myFooBarLogger = createLogger({ namespace: 'FooBar' });
-
-// minimal call: myLogger.event(<eventType>, <event>)
-
-myFooBarLogger.event('LoginFailed', { username: 'alice@example.com' });
-// => {"namespace":"FooBar","FooBar.eventType":"LoginFailed","FooBar.event.LoginFailed.username":"alice@example.com","level":"info"}
-
-// log event with message
-
-myFooBarLogger.event('LoginFailed', { username: 'alice@example.com' }, 'Failed login attempt');
-// => {"namespace":"FooBar","FooBar.eventType":"LoginFailed","FooBar.event.LoginFailed.username":"alice@example.com","level":"info","message":"Failed login attempt"}
-
-// log event with requestId
-
-myFooBarLogger
-    .withRequestId('537ff8cb-a5fd-41d7-8de7-188407163608')
-    .event('LoginFailed', { username: 'alice@example.com' }, 'Failed login attempt');
-// => {"requestId":"537ff8cb-a5fd-41d7-8de7-188407163608","namespace":"FooBar","FooBar.eventType":"LoginFailed","FooBar.event.LoginFailed.username":"alice@example.com","level":"info","message":"Failed login attempt"}
+const err = new Error('this is a test error.');
+logger.type('SomeError').exception(err, 'this is a flattened, normalized error log which prints err.(message|stack|code); safe for elasticsearch.');
