@@ -11,9 +11,10 @@
     "build": "rollup -c",
     "coverage": "jest --coverage .",
     "check": "npm test && npm run coverage && npm run lint",
+	"docs": "npm run build && node support/example.js > support/example.log && node support/example.js | fx > support/example.pretty.log",
     "lint": "eslint .",
     "pretest": "npm run build",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run build & npm run docs",
     "start": "babel-node demo.js | fx",
     "test": "jest ."
   },
