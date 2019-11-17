@@ -94,9 +94,9 @@ describe('createLogger', () => {
                 const stack = 'phat stax';
                 const $foo = 'foo';
                 const $err = { message, stack, code, $foo };
-                const err = { message, stack, code };
+                const exception = { message, stack, code };
                 logger.exception($err, $messageStr);
-                expect($error).toHaveBeenCalledWith(...logger.normalizeLog({ err }, $messageStr));
+                expect($error).toHaveBeenCalledWith(...logger.normalizeLog({ exception }, $messageStr));
             });
             test('fatal works as expected', () => {
                 logger.fatal($messageObj, $messageStr);

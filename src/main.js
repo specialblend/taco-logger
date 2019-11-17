@@ -41,8 +41,8 @@ export class Logger extends BunyanLogger {
     }
 
     exception(ex, ...args) {
-        const err = formatException(ex);
-        return this.error({ err }, ...args);
+        const exception = formatException(ex);
+        return this.error({ exception }, ...args);
     }
 
     type(type) {
