@@ -1,6 +1,6 @@
 {
   "name": "@specialblend/taco-logger",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "namespaced, flattened JSON logger - safe for elastic/filebeat",
   "main": "index.js",
   "module": "lib/index.esm.js",
@@ -11,7 +11,7 @@
     "build": "rollup -c",
     "coverage": "jest --coverage .",
     "check": "npm test && npm run coverage && npm run lint",
-	"docs": "npm run build && node support/example.js > support/example.log && node support/example.js | fx > support/example.pretty.log",
+    "docs": "npm run build && node support/example.js > support/example.log && node support/example.js | fx > support/example.pretty.log",
     "lint": "eslint .",
     "pretest": "npm run build",
     "prepublishOnly": "npm run build & npm run docs",
