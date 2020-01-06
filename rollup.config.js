@@ -1,7 +1,7 @@
 import { module as __module__ } from './package.json';
 
 export default {
-    input: 'src/main.js',
+    input: 'src/main.ts',
     output: [
         {
             file: __module__,

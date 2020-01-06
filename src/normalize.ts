@@ -7,7 +7,7 @@ const serializeChild = unless(isString, JSON.stringify);
 const serializeObject = pipe(flat, map(serializeChild));
 
 const normalize = curry(
-    (name, type, meta) => {
+    (name: string, type: string, meta: any) => {
         const payload = {
             [name]: {
                 [type]: meta,

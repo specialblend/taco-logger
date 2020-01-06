@@ -42,13 +42,16 @@
     "@babel/node": "^7.7.0",
     "@babel/preset-env": "^7.6.0",
     "@specialblend/eslint-config": "^0.1.1",
+    "@types/ramda": "^0.26.39",
     "eslint": "^6.3.0",
     "fx": "^14.1.0",
     "jest": "^24.9.0",
     "jest-extended": "^0.11.2",
-    "rollup": "^1.27.0"
+    "rollup": "^1.27.0",
+    "typescript": "^3.7.4"
   },
   "dependencies": {
+    "@types/bunyan": "^1.8.6",
     "bunyan": "^1.8.12",
     "esm": "^3.2.25",
     "flat": "^4.1.0",
