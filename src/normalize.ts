@@ -1,3 +1,4 @@
+// @ts-ignore
 import flat from 'flat';
 import { curry, is, map, pipe, unless } from 'ramda';
 
@@ -13,6 +14,7 @@ const normalize = curry(
                 [type]: meta,
             },
         };
+        // @ts-ignore
         return serializeObject(payload);
     },
 );

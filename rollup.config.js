@@ -1,10 +1,10 @@
-import { module as __module__ } from './package.json';
+import { module as _module } from './package.json';
 
 export default {
     input: 'src/main.ts',
     output: [
         {
-            file: __module__,
+            file: _module,
             format: 'esm',
         },
     ],

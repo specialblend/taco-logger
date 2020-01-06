@@ -2,16 +2,19 @@ import { is, pick } from 'ramda';
 import BunyanLogger, { LoggerOptions } from 'bunyan';
 import normalize from './normalize';
 
-const isObject = is(Object);
-
 const formatException = pick(['message', 'stack', 'code']);
 
 export class Logger extends BunyanLogger {
     normalizeLog(data: any): any {
-        if (isObject(data)) {
+        if (is(Object, data) && is(String, this.fields.type)) {
             return normalize(this.fields.name, this.fields.type, data);
         }
         return data;
+    }
+
+    // @ts-ignore
+    trace(data: any, ... params: any[]): void {
+        return super.trace(this.normalizeLog(data), ... params);
     }
 
     // @ts-ignore
@@ -36,7 +39,7 @@ export class Logger extends BunyanLogger {
 
     // @ts-ignore
     fatal(data: any, ... params: any[]): void {
-        return super.error(this.normalizeLog(data), ... params);
+        return super.fatal(this.normalizeLog(data), ... params);
     }
 
     exception(ex: any, ... params: any[]): void {
