@@ -3,19 +3,18 @@
   "version": "0.0.16",
   "description": "namespaced, flattened JSON logger - safe for elastic/filebeat",
   "main": "index.js",
-  "module": "lib/index.esm.js",
+  "module": "index.js",
   "files": [
     "lib"
   ],
   "scripts": {
-    "build": "rollup -c",
+    "build": "tsc",
     "coverage": "jest --coverage .",
     "check": "npm test && npm run coverage && npm run lint",
     "docs": "npm run build && node support/example.js > support/example.log && node support/example.js | fx > support/example.pretty.log",
     "lint": "eslint .",
     "pretest": "npm run build",
     "prepublishOnly": "npm run build & npm run docs",
-    "start": "babel-node demo.js | fx",
     "test": "jest ."
   },
   "repository": {
@@ -45,10 +44,8 @@
     "@specialblend/eslint-config": "^0.1.1",
     "@types/ramda": "^0.26.39",
     "eslint": "^6.3.0",
-    "fx": "^14.1.0",
     "jest": "^24.9.0",
     "jest-extended": "^0.11.2",
-    "rollup": "^1.27.0",
     "typescript": "^3.7.4"
   },
   "dependencies": {

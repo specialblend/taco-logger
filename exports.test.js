@@ -1,4 +1,4 @@
-import createLogger, { Logger } from './index';
+import createLogger, { Logger } from './lib/main';
 
 describe('createLogger', () => {
     test('is Function', () => {

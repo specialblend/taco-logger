@@ -16,6 +16,7 @@ const coveragePathIgnorePatterns = [
     '<rootDir>/coverage/',
     '<rootDir>/jest.config.js',
     '<rootDir>/rollup.config.js',
+    '<rootDir>/index.js',
 ];
 
 const globalSetup = './__mocks__/env.js';

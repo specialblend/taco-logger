@@ -1,6 +1,6 @@
 // @ts-ignore
 import flat from 'flat';
-import { curry, is, map, pick, pipe, unless, useWith } from 'ramda';
+import { curry, is, map, pick, pipe, unless } from 'ramda';
 import BunyanLogger, { LoggerOptions } from 'bunyan';
 
 const formatException = pick(['message', 'stack', 'code']);
