@@ -3,7 +3,7 @@ const createLogger = require('../index').default;
 const name = 'taco';
 const requestId = 'a90e0e3c-7159-453e-b224-cc5fa5cfe3a6';
 
-const logger = createLogger({ name }).withRequestId(requestId);
+const logger = createLogger({ name }).child({ requestId });
 
 logger.info({ foo: 'bar', baz: 'faz' }, 'this is a normal bunyan info log -- not safe for elasticsearch!');
 logger.error({ foo: 'bar', baz: 'faz' }, 'this is a normal bunyan error log -- not safe for elasticsearch!');
