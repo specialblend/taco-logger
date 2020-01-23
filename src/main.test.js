@@ -1,7 +1,6 @@
 import BunyanLogger from 'bunyan';
 import { $debug, $error, $fatal, $info, $trace, $warn } from '../__mocks__/bunyan';
-import createLogger, { Logger } from './main';
-import normalize from './normalize';
+import createLogger, { Logger, normalize } from './main';
 
 jest.mock('bunyan');
 
