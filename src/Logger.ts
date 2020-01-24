@@ -1,3 +1,4 @@
+/* eslint-disable max-params,func-style */
 import flat from 'flat';
 import BunyanLogger from 'bunyan';
 import { either, is, map, pick, pipe, unless, when } from 'ramda';
@@ -34,10 +35,6 @@ function log(logger: Logger, emitter: Function, payload?: any, ...params: any[])
 }
 
 export default class Logger extends BunyanLogger {
-
-	/**
-	 * Composable alias for info
-	 */
     get log(): Function {
         return this.info.bind(this);
     }
