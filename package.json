@@ -41,6 +41,7 @@
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-typescript": "^7.7.7",
     "@specialblend/eslint-config": "^0.1.1",
+    "@specialblend/jest-pipe": "^0.1.2",
     "@types/ramda": "^0.26.39",
     "@typescript-eslint/eslint-plugin": "^2.17.0",
     "@typescript-eslint/parser": "^2.17.0",
