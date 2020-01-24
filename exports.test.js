@@ -1,10 +1,4 @@
-import createLogger, { Logger } from './lib';
-
-describe('createLogger', () => {
-    test('is Function', () => {
-        expect(createLogger).toBeFunction();
-    });
-});
+import Logger from './lib/Logger';
 
 describe('Logger', () => {
     test('is Function', () => {

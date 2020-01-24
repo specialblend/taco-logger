@@ -92,7 +92,7 @@ export default class Logger extends BunyanLogger {
 	 * @param {string} namespace namespace
 	 * @returns {Logger} child logger
 	 */
-    type(namespace: string): BunyanLogger | Logger {
-        return this.child({ type: namespace });
+    type(namespace: string): Logger {
+        return this.child({ type: namespace }) as Logger;
     }
 }
