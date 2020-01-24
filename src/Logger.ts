@@ -12,35 +12,36 @@ const serializeChild = unless(isString, JSON.stringify);
 const serializeObject = pipe(flat, map(serializeChild));
 const serializePayload = when(isError, serializeException);
 
-function serialize(logger: Logger, payload: any): any {
-    const { name, type } = logger.fields;
-    if (isSerializable(payload) && is(String, type)) {
-        const data = serializePayload(payload);
-        const log = {
-            [name]: {
-                [type]: data,
-            },
-        };
-        return serializeObject(log);
-    }
-    return payload;
-}
-
-function log(logger: Logger, emitter: Function, payload?: any, ...params: any[]): boolean | void {
-    if (typeof payload === 'undefined') {
-        return emitter();
-    }
-    const data = serialize(logger, payload);
-    return emitter(data, ...params);
-}
-
 export default class Logger extends BunyanLogger {
+    private serialize(payload: any): any {
+        const { name, type } = this.fields;
+        if (isSerializable(payload) && is(String, type)) {
+            const data = serializePayload(payload);
+            const log = {
+                [name]: {
+                    [type]: data,
+                },
+            };
+            return serializeObject(log);
+        }
+        return payload;
+    }
+
+    private log(emitter: Function = this.info, payload?: any, ...params: any[]): boolean | void {
+        const _emitter = emitter.bind(this);
+        if (typeof payload === 'undefined') {
+            return _emitter();
+        }
+        const data = this.serialize(payload);
+        return _emitter(data, ...params);
+    }
+
     trace(): boolean
     trace(error: Error, ...params: any[]): void;
     trace(obj: object, ...params: any[]): void;
     trace(format: any, ...params: any[]): void;
     trace(payload?: any, ...params: any[]): boolean | void {
-        return log(this, super.trace, payload, ...params);
+        return this.log(super.trace, payload, ...params);
     }
 
     debug(): boolean
@@ -48,7 +49,7 @@ export default class Logger extends BunyanLogger {
     debug(obj: object, ...params: any[]): void;
     debug(format: any, ...params: any[]): void;
     debug(payload?: any, ...params: any[]): boolean | void {
-        return log(this, super.debug, payload, ...params);
+        return this.log(super.debug, payload, ...params);
     }
 
     info(): boolean
@@ -56,7 +57,7 @@ export default class Logger extends BunyanLogger {
     info(obj: object, ...params: any[]): void;
     info(format: any, ...params: any[]): void;
     info(payload?: any, ...params: any[]): boolean | void {
-        return log(this, super.info, payload, ...params);
+        return this.log(super.info, payload, ...params);
     }
 
     warn(): boolean
@@ -64,7 +65,7 @@ export default class Logger extends BunyanLogger {
     warn(obj: object, ...params: any[]): void;
     warn(format: any, ...params: any[]): void;
     warn(payload?: any, ...params: any[]): boolean | void {
-        return log(this, super.warn, payload, ...params);
+        return this.log(super.warn, payload, ...params);
     }
 
     error(): boolean
@@ -72,7 +73,7 @@ export default class Logger extends BunyanLogger {
     error(obj: object, ...params: any[]): void;
     error(format: any, ...params: any[]): void;
     error(payload?: any, ...params: any[]): boolean | void {
-        return log(this, super.error, payload, ...params);
+        return this.log(super.error, payload, ...params);
     }
 
     fatal(): boolean
@@ -80,7 +81,7 @@ export default class Logger extends BunyanLogger {
     fatal(obj: object, ...params: any[]): void;
     fatal(format: any, ...params: any[]): void;
     fatal(payload?: any, ...params: any[]): boolean | void {
-        return log(this, super.fatal, payload, ...params);
+        return this.log(super.fatal, payload, ...params);
     }
 
     /**
@@ -91,6 +92,7 @@ export default class Logger extends BunyanLogger {
     type(namespace: string): Logger {
         return this.child({ type: namespace }) as Logger;
     }
+
     child(options: Record<string, any>, simple?: boolean): Logger {
         return super.child.bind(this)(options, simple) as Logger;
     }
