@@ -35,7 +35,6 @@ function log(logger: Logger, emitter: Function, payload?: any, ...params: any[])
 }
 
 export default class Logger extends BunyanLogger {
-
     trace(): boolean
     trace(error: Error, ...params: any[]): void;
     trace(obj: object, ...params: any[]): void;
@@ -91,5 +90,8 @@ export default class Logger extends BunyanLogger {
 	 */
     type(namespace: string): Logger {
         return this.child({ type: namespace }) as Logger;
+    }
+    child(options: Record<string, any>, simple?: boolean): Logger {
+        return super.child.bind(this)(options, simple) as Logger;
     }
 }
