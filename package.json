@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "description": "namespaced, flattened JSON logger - safe for elastic/filebeat",
   "main": "lib/main.js",
-  "module": "index.js",
+  "module": "lib/main.js",
   "types": "lib/main.d.ts",
   "files": [
     "lib"

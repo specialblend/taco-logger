@@ -1,4 +1,4 @@
-import { normalize } from './main';
+import { normalize } from './index';
 
 const $messageObj = {
     foo: {
