@@ -42,6 +42,8 @@
     "@babel/preset-typescript": "^7.7.7",
     "@specialblend/eslint-config": "^0.1.1",
     "@types/ramda": "^0.26.39",
+    "@typescript-eslint/eslint-plugin": "^2.17.0",
+    "@typescript-eslint/parser": "^2.17.0",
     "eslint": "^6.3.0",
     "jest": "^24.9.0",
     "jest-extended": "^0.11.2",
@@ -49,6 +51,7 @@
   },
   "dependencies": {
     "@types/bunyan": "^1.8.6",
+    "@types/flat": "0.0.28",
     "bunyan": "^1.8.12",
     "esm": "^3.2.25",
     "flat": "^4.1.0",
