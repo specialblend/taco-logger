@@ -35,9 +35,6 @@ function log(logger: Logger, emitter: Function, payload?: any, ...params: any[])
 }
 
 export default class Logger extends BunyanLogger {
-    get log(): Function {
-        return this.info.bind(this);
-    }
 
     trace(): boolean
     trace(error: Error, ...params: any[]): void;
