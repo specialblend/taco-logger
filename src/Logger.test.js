@@ -324,23 +324,6 @@ describe('Logger', () => {
                     });
                 });
             });
-            describe('log', () => {
-                const _log = $logger.log;
-                test('is Function', () => {
-                    expect(_log).toBeFunction();
-                });
-                describe('when called', () => {
-                    withTaggedMocks('Logger->log(payload:string, type:none)', $mocks => {
-                        const $payload = $mocks.uniqueSafeTag('payload');
-                        beforeAll(() => {
-                            _log($payload);
-                        });
-                        test('calls $info with expected payload', () => {
-                            expect($info).toHaveBeenCalledWith($payload);
-                        });
-                    });
-                });
-            });
             describe('type', () => {
                 test('is Function', () => {
                     expect($logger.type).toBeFunction();
@@ -671,23 +654,6 @@ describe('Logger', () => {
                                     [join('.', [$name, $type, 'bar'])]: $payload.bar,
                                 });
                             });
-                        });
-                    });
-                });
-            });
-            describe('log', () => {
-                const _log = $logger.log;
-                test('is Function', () => {
-                    expect(_log).toBeFunction();
-                });
-                describe('when called', () => {
-                    withTaggedMocks('Logger->log(payload:string, type:none)', $mocks => {
-                        const $payload = $mocks.uniqueSafeTag('payload');
-                        beforeAll(() => {
-                            _log($payload);
-                        });
-                        test('calls $info with expected payload', () => {
-                            expect($info).toHaveBeenCalledWith($payload);
                         });
                     });
                 });
@@ -1023,23 +989,6 @@ describe('Logger', () => {
                                     [join('.', [$name, $type, 'bar'])]: $payload.bar,
                                 });
                             });
-                        });
-                    });
-                });
-            });
-            describe('log', () => {
-                const _log = $logger.log;
-                test('is Function', () => {
-                    expect(_log).toBeFunction();
-                });
-                describe('when called', () => {
-                    withTaggedMocks('Logger->log(payload:string, type:none)', $mocks => {
-                        const $payload = $mocks.uniqueSafeTag('payload');
-                        beforeAll(() => {
-                            _log($payload);
-                        });
-                        test('calls $info with expected payload', () => {
-                            expect($info).toHaveBeenCalledWith($payload);
                         });
                     });
                 });
